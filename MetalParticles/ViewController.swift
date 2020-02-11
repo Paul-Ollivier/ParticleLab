@@ -32,7 +32,7 @@ class ViewController: UIViewController, ParticleLabDelegate
     
     let floatPi = Float(Double.pi)
     
-    let hiDPI = false
+    let hiDPI = true
     
     var particleLab: ParticleLab!
     
@@ -90,7 +90,7 @@ class ViewController: UIViewController, ParticleLabDelegate
         
         view.addSubview(menuButton)
         
-        statusLabel.text = "http://flexmonkey.blogspot.co.uk"
+        statusLabel.text = "particles demo"
         statusLabel.textColor = UIColor.darkGray
         
         view.addSubview(statusLabel)
@@ -113,15 +113,16 @@ class ViewController: UIViewController, ParticleLabDelegate
     {
         // handle metal unavailable here
     }
-
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?)
+    
+    // open func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
     {
         currentTouches = currentTouches.union(touches)
     }
 
-    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?)
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?)
     {
-        currentTouches = currentTouches.subtract(touches)
+        currentTouches = currentTouches.subtracting(touches)
     }
     
     @objc func displayCallout()
@@ -194,7 +195,7 @@ class ViewController: UIViewController, ParticleLabDelegate
     
     func particleLabDidUpdate(status: String)
     {
-        statusLabel.text = "http://flexmonkey.blogspot.co.uk  |  " + status
+        statusLabel.text = status
         
         particleLab.resetGravityWells()
         
@@ -239,15 +240,15 @@ class ViewController: UIViewController, ParticleLabDelegate
     {
         let currentTouchesArray = Array(currentTouches)
         
-        for (i, currentTouch) in currentTouchesArray.enumerate() where i < 4
+        for (i, currentTouch) in currentTouchesArray.enumerated() where i < 4
         {
             let touchMultiplier = currentTouch.force == 0 && currentTouch.maximumPossibleForce == 0
                 ? 1
                 : Float(currentTouch.force / currentTouch.maximumPossibleForce)
             
             particleLab.setGravityWellProperties(gravityWellIndex: i,
-                normalisedPositionX: Float(currentTouch.locationInView(view).x / view.frame.width) ,
-                normalisedPositionY: Float(currentTouch.locationInView(view).y / view.frame.height),
+                                                 normalisedPositionX: Float(currentTouch.location(in: view).x / view.frame.width) ,
+                                                 normalisedPositionY: Float(currentTouch.location(in: view).y / view.frame.height),
                 mass: 40 * touchMultiplier,
                 spin: 20 * touchMultiplier)
         }
@@ -357,7 +358,7 @@ class ViewController: UIViewController, ParticleLabDelegate
             mass: 26, spin: -19 * sin(gravityWellAngle * 1.5))
     }
     
-    
+    /*
     override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask
     {
         return UIInterfaceOrientationMask.landscape
@@ -368,6 +369,7 @@ class ViewController: UIViewController, ParticleLabDelegate
     {
         return UIStatusBarStyle.lightContent
     }
+   */
     
     override func didReceiveMemoryWarning()
     {
@@ -375,10 +377,12 @@ class ViewController: UIViewController, ParticleLabDelegate
         // Dispose of any resources that can be recreated.
     }
     
+    /*
     override func prefersStatusBarHidden() -> Bool
     {
         return true
     }
+   */
 }
 
 

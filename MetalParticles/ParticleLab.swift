@@ -94,7 +94,7 @@ class ParticleLab: MTKView
         bytesPerRow = 4 * imageWidth
         
         region = MTLRegionMake2D(0, 0, Int(imageWidth), Int(imageHeight))
-        blankBitmapRawData = [UInt8](unsafeUninitializedCapacity: Int(imageWidth * imageHeight * 4), initializingWith: 0)
+        blankBitmapRawData = [UInt8](unsafeUninitializedCapacity: Int(imageWidth * imageHeight * 4), initializingWith: {_, _ in})
         particlesMemoryByteSize = particleCount * MemoryLayout<Particle>.size
     
         let formatter = NumberFormatter()
@@ -323,10 +323,12 @@ class ParticleLab: MTKView
             
         commandEncoder!.setTexture(drawable.texture, index: 0)
         
-        commandEncoder.dispatchThreadgroups(threadgroupsPerGrid, threadsPerThreadgroup: threadsPerThreadgroup)
+        //(threadgroupsPerGrid, threadsPerThreadgroup: threadsPerThreadgroup)
+        commandEncoder?.dispatchThreadgroups(threadgroupsPerGrid!, threadsPerThreadgroup: threadsPerThreadgroup)
         
         commandEncoder!.endEncoding()
         
+        /* FIXME XXX
         if !clearOnStep
         {
             let inPlaceTexture = UnsafeMutablePointer<MTLTexture?>.allocate(capacity: 1)
@@ -340,6 +342,7 @@ class ParticleLab: MTKView
                                         inPlaceTexture: inPlaceTexture,
                 fallbackCopyAllocator: nil)
         }
+         */
         
         commandBuffer!.commit()
         
